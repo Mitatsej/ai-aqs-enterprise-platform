@@ -1,0 +1,40 @@
+[project]
+name = "ai-aqd"
+version = "0.1.0"
+description = "AI-Assisted Quality & Delivery Audit Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "AI_AQD Project Team" }
+]
+dependencies = [
+  "pandas>=2.2.0",
+  "pyarrow>=15.0.0",
+  "pyyaml>=6.0.0",
+  "duckdb>=0.10.0",
+  "streamlit>=1.32.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.3.0",
+  "mypy>=1.8.0"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+

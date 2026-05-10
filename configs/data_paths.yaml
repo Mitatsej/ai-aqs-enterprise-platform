@@ -1,0 +1,26 @@
+# Centralized data path configuration.
+# Keep pipeline paths configurable instead of hardcoding locations in code.
+
+version: 1
+
+root: data
+
+layers:
+  raw: data/raw
+  bronze: data/bronze
+  silver: data/silver
+  gold: data/gold
+  sample: data/sample
+
+expected_sources:
+  projects: data/raw/projects.csv
+  sprint_metrics: data/raw/sprint_metrics.csv
+  defects: data/raw/defects.csv
+  code_quality_metrics: data/raw/code_quality_metrics.csv
+  governance_metrics: data/raw/governance_metrics.csv
+
+gold_outputs:
+  project_quality_scores: data/gold/project_quality_scores.parquet
+  project_risk_summary: data/gold/project_risk_summary.parquet
+  recommendations: data/gold/recommendations.parquet
+

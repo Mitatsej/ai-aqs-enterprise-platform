@@ -1,0 +1,65 @@
+# Scoring rules for project quality and delivery health.
+# These values are placeholders and should be refined with business stakeholders.
+
+version: 1
+
+score_range:
+  minimum: 0
+  maximum: 100
+
+dimensions:
+  delivery:
+    weight: 0.30
+    metrics:
+      sprint_predictability:
+        weight: 0.40
+        description: "Measures how consistently committed work is delivered."
+      velocity_stability:
+        weight: 0.30
+        description: "Measures whether team delivery is stable across sprints."
+      scope_change_rate:
+        weight: 0.30
+        description: "Measures delivery disruption from changing scope."
+
+  quality:
+    weight: 0.30
+    metrics:
+      defect_density:
+        weight: 0.35
+        description: "Measures defects relative to delivered work."
+      escaped_defects:
+        weight: 0.35
+        description: "Measures defects found after release."
+      test_coverage:
+        weight: 0.30
+        description: "Measures automated test coverage."
+
+  engineering:
+    weight: 0.25
+    metrics:
+      code_smells:
+        weight: 0.25
+        description: "Measures maintainability concerns in the codebase."
+      duplicated_code:
+        weight: 0.25
+        description: "Measures repeated implementation patterns."
+      technical_debt_ratio:
+        weight: 0.30
+        description: "Measures estimated effort required to address code quality issues."
+      security_hotspots:
+        weight: 0.20
+        description: "Measures potential security-sensitive areas."
+
+  governance:
+    weight: 0.15
+    metrics:
+      documentation_completeness:
+        weight: 0.30
+        description: "Measures completeness of required project documentation."
+      audit_compliance:
+        weight: 0.40
+        description: "Measures compliance with required delivery controls."
+      risk_review_status:
+        weight: 0.30
+        description: "Measures whether risk reviews are current and complete."
+

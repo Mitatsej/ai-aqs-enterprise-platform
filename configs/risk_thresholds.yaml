@@ -1,0 +1,37 @@
+# Risk classification thresholds.
+# These are placeholders for the MVP and should be calibrated after sample data exists.
+
+version: 1
+
+risk_levels:
+  low:
+    minimum_score: 85
+    maximum_score: 100
+    description: "Project appears healthy with limited immediate intervention required."
+
+  medium:
+    minimum_score: 70
+    maximum_score: 84
+    description: "Project has manageable concerns that should be monitored."
+
+  high:
+    minimum_score: 50
+    maximum_score: 69
+    description: "Project has material delivery, quality, or governance risks."
+
+  critical:
+    minimum_score: 0
+    maximum_score: 49
+    description: "Project requires immediate leadership attention."
+
+override_rules:
+  escaped_defects_critical:
+    condition: "escaped_defects >= 10"
+    forced_risk_level: "high"
+    description: "A high number of escaped defects should raise delivery risk."
+
+  governance_non_compliance:
+    condition: "audit_compliance < 0.60"
+    forced_risk_level: "high"
+    description: "Poor audit compliance should raise governance risk."
+
