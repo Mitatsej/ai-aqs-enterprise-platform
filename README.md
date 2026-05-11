@@ -24,10 +24,11 @@ Foundation initialized:
 - Python package layout
 - Documentation placeholders
 - Configuration placeholders
-- Pipeline script placeholders
+- Bronze ingestion pipeline
 - Data layer folders
 
-Production implementation is intentionally not included yet.
+Silver, Gold, scoring, recommendations, and dashboard logic will be added
+incrementally in later phases.
 
 ## Architecture Summary
 
@@ -87,14 +88,64 @@ AI_AQD/
 - Add tests as pipeline behavior becomes real.
 - Avoid putting production logic inside notebooks.
 
+## Generate Sample Raw Data
+
+Create the synthetic MVP source files in `data/raw/`:
+
+```powershell
+python scripts/generate_sample_data.py
+```
+
+This generates:
+
+- `projects.csv`
+- `sprint_metrics.csv`
+- `defects.csv`
+- `code_quality_metrics.csv`
+- `governance_metrics.csv`
+
+## Run Bronze Ingestion
+
+Run the current pipeline:
+
+```powershell
+python scripts/run_pipeline.py
+```
+
+Phase 3 reads the expected raw CSV files from `data/raw/`, adds ingestion
+metadata, and writes Parquet files to `data/bronze/`.
+
+Bronze outputs:
+
+- `data/bronze/projects.parquet`
+- `data/bronze/sprint_metrics.parquet`
+- `data/bronze/defects.parquet`
+- `data/bronze/code_quality_metrics.parquet`
+- `data/bronze/governance_metrics.parquet`
+
+Bronze metadata columns:
+
+- `ingestion_timestamp`
+- `source_file`
+- `source_system`
+- `batch_id`
+
+To verify the files were created:
+
+```powershell
+Get-ChildItem data/bronze
+```
+
+To inspect one Bronze dataset:
+
+```powershell
+python -c "import pandas as pd; print(pd.read_parquet('data/bronze/projects.parquet').head())"
+```
+
 ## Next Implementation Steps
 
-1. Define final sample input schemas.
-2. Generate realistic sample datasets.
-3. Implement Bronze ingestion.
-4. Add validation checks.
-5. Implement Bronze-to-Silver transformations.
-6. Implement Silver-to-Gold aggregations.
-7. Add scoring, risk classification, and recommendations.
-8. Build the first dashboard.
-
+1. Add validation checks.
+2. Implement Bronze-to-Silver transformations.
+3. Implement Silver-to-Gold aggregations.
+4. Add scoring, risk classification, and recommendations.
+5. Build the first dashboard.
