@@ -1,8 +1,8 @@
 """Pipeline entry point for AI_AQD.
 
-The current pipeline runs raw-to-Bronze ingestion followed by Bronze-to-Silver
-validation and transformation. Gold aggregation, scoring, risk classification,
-and recommendations will be added in later phases.
+The current pipeline runs raw-to-Bronze ingestion, Bronze-to-Silver validation,
+and Silver-to-Gold metric aggregation. Scoring, risk classification, and
+recommendations will be added in later phases.
 """
 
 from __future__ import annotations
@@ -18,6 +18,7 @@ if str(SRC_DIR) not in sys.path:
 
 from ai_aqd.ingestion.load_sources import ingest_expected_sources_to_bronze
 from ai_aqd.transformation.bronze_to_silver import run_bronze_to_silver
+from ai_aqd.transformation.silver_to_gold import run_silver_to_gold
 
 
 def main() -> None:
@@ -44,6 +45,14 @@ def main() -> None:
         )
         for message in result.messages:
             print(f"  - {message}")
+
+    gold_result = run_silver_to_gold()
+
+    print("Gold metric aggregation complete.")
+    relative_output = gold_result.output_path.relative_to(PROJECT_ROOT)
+    print(f"- {gold_result.output_name}: {gold_result.row_count} rows written to {relative_output}")
+    for message in gold_result.messages:
+        print(f"  - {message}")
 
 
 if __name__ == "__main__":
