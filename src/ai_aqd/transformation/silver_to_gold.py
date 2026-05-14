@@ -294,6 +294,6 @@ def run_silver_to_gold(
         row_count=len(project_summary),
         messages=[
             "Gold output contains one row per project",
-            "Gold aggregation calculated metrics only; scoring is not implemented yet",
+            "Gold aggregation calculated metrics only; scoring runs in the next pipeline step",
         ],
     )

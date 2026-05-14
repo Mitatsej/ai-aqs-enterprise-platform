@@ -27,10 +27,10 @@ Foundation initialized:
 - Bronze ingestion pipeline
 - Silver validation and transformation pipeline
 - Gold metric aggregation pipeline
+- Rule-based quality scoring pipeline
 - Data layer folders
 
-Scoring, risk classification, recommendations, and dashboard logic will be
-added incrementally in later phases.
+Recommendations and dashboard logic will be added incrementally in later phases.
 
 ## Architecture Summary
 
@@ -119,6 +119,7 @@ The current pipeline runs:
 1. Raw CSV to Bronze Parquet ingestion
 2. Bronze to Silver validation and transformation
 3. Silver to Gold project-level metric aggregation
+4. Gold metric scoring and risk classification
 
 Bronze outputs:
 
@@ -158,9 +159,12 @@ Silver outputs:
 Gold output:
 
 - `data/gold/project_risk_summary.parquet`
+- `data/gold/project_quality_scores.parquet`
 
-Gold currently contains aggregated project metrics only. It does not yet include
-quality scores, risk levels, or recommendations.
+`project_risk_summary.parquet` contains aggregated project metrics only.
+`project_quality_scores.parquet` adds rule-based dimension scores, the overall
+project score, risk level, and top negative contributors. Recommendations are
+not implemented yet.
 
 To inspect the Gold project summary:
 
@@ -168,9 +172,14 @@ To inspect the Gold project summary:
 python -c "import pandas as pd; print(pd.read_parquet('data/gold/project_risk_summary.parquet'))"
 ```
 
+To inspect the scored project output:
+
+```powershell
+python -c "import pandas as pd; print(pd.read_parquet('data/gold/project_quality_scores.parquet')[['project_id','delivery_score','quality_score','engineering_score','governance_score','overall_project_score','risk_level','top_negative_contributors']])"
+```
+
 ## Next Implementation Steps
 
-1. Implement scoring from Gold metrics.
-2. Implement risk classification thresholds.
-3. Add recommendation rules.
-4. Build the first dashboard.
+1. Add recommendation rules.
+2. Build the first dashboard.
+3. Add tests for scoring and risk classification.
