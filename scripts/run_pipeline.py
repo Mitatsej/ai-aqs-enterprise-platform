@@ -1,8 +1,8 @@
 """Pipeline entry point for AI_AQD.
 
 The current pipeline runs raw-to-Bronze ingestion, Bronze-to-Silver validation,
-Silver-to-Gold metric aggregation, and rule-based quality scoring.
-Recommendations will be added in later phases.
+Silver-to-Gold metric aggregation, rule-based quality scoring, and rule-based
+recommendations.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from ai_aqd.ingestion.load_sources import ingest_expected_sources_to_bronze
+from ai_aqd.recommendations.rules_engine import run_recommendation_engine
 from ai_aqd.scoring.quality_score import run_quality_scoring
 from ai_aqd.transformation.bronze_to_silver import run_bronze_to_silver
 from ai_aqd.transformation.silver_to_gold import run_silver_to_gold
@@ -64,6 +65,17 @@ def main() -> None:
         f"written to {relative_output}"
     )
     for message in scoring_result.messages:
+        print(f"  - {message}")
+
+    recommendation_result = run_recommendation_engine()
+
+    print("Recommendation generation complete.")
+    relative_output = recommendation_result.output_path.relative_to(PROJECT_ROOT)
+    print(
+        f"- {recommendation_result.output_name}: {recommendation_result.row_count} rows "
+        f"written to {relative_output}"
+    )
+    for message in recommendation_result.messages:
         print(f"  - {message}")
 
 

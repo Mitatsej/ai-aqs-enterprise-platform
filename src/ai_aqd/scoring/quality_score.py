@@ -248,6 +248,6 @@ def run_quality_scoring(
         messages=[
             "Calculated delivery, quality, engineering, and governance scores",
             "Assigned risk levels from configured score thresholds",
-            "Recommendations are not implemented yet",
+            "Recommendations run in the next pipeline step",
         ],
     )

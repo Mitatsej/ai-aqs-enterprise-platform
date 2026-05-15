@@ -28,9 +28,11 @@ Foundation initialized:
 - Silver validation and transformation pipeline
 - Gold metric aggregation pipeline
 - Rule-based quality scoring pipeline
+- Rule-based recommendation pipeline
+- Streamlit executive dashboard
 - Data layer folders
 
-Recommendations and dashboard logic will be added incrementally in later phases.
+The MVP data pipeline and first executive dashboard are now available.
 
 ## Architecture Summary
 
@@ -120,6 +122,7 @@ The current pipeline runs:
 2. Bronze to Silver validation and transformation
 3. Silver to Gold project-level metric aggregation
 4. Gold metric scoring and risk classification
+5. Rule-based recommendation generation
 
 Bronze outputs:
 
@@ -160,11 +163,14 @@ Gold output:
 
 - `data/gold/project_risk_summary.parquet`
 - `data/gold/project_quality_scores.parquet`
+- `data/gold/recommendations.parquet`
 
 `project_risk_summary.parquet` contains aggregated project metrics only.
 `project_quality_scores.parquet` adds rule-based dimension scores, the overall
-project score, risk level, and top negative contributors. Recommendations are
-not implemented yet.
+project score, risk level, and top negative contributors.
+`recommendations.parquet` adds executive summaries, risk explanations, and
+recommended actions generated from transparent rules. No LLM integration is used
+yet.
 
 To inspect the Gold project summary:
 
@@ -178,8 +184,42 @@ To inspect the scored project output:
 python -c "import pandas as pd; print(pd.read_parquet('data/gold/project_quality_scores.parquet')[['project_id','delivery_score','quality_score','engineering_score','governance_score','overall_project_score','risk_level','top_negative_contributors']])"
 ```
 
+To inspect recommendations:
+
+```powershell
+python -c "import pandas as pd; print(pd.read_parquet('data/gold/recommendations.parquet')[['project_id','risk_level','executive_summary','risk_explanation','recommended_actions']])"
+```
+
+## Run Executive Dashboard
+
+Generate the latest Gold outputs first:
+
+```powershell
+python scripts/run_pipeline.py
+```
+
+Start the Streamlit dashboard:
+
+```powershell
+python -m streamlit run src/ai_aqd/dashboard/app.py
+```
+
+The dashboard uses:
+
+- `data/gold/project_quality_scores.parquet`
+- `data/gold/recommendations.parquet`
+
+Dashboard sections:
+
+- Executive KPI summary
+- Project risk overview table
+- Risk distribution chart
+- Overall score comparison chart
+- Dimension score comparison chart
+- Project detail drill-down
+- Recommendations section
+
 ## Next Implementation Steps
 
-1. Add recommendation rules.
-2. Build the first dashboard.
-3. Add tests for scoring and risk classification.
+1. Add automated tests for scoring, risk classification, recommendations, and dashboard data loading.
+2. Add dashboard styling refinements and optional export views.
